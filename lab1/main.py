@@ -100,12 +100,12 @@ def iterational_method(C, D,result_matrix, accuracy, n, iteration_counter):
     if(max_deviation < accuracy):
         return result_matrix
     else:
-        iterational_method(C,D, result_matrix, accuracy, n, iteration_counter + 1)
+        return iterational_method(C,D, result_matrix, accuracy, n, iteration_counter + 1)
 
     
 
-n = 3#input.enter_demension()
-accuracy = 0.01#input.enter_accuracy()
+n = input.enter_demension()
+accuracy = input.enter_accuracy()
 A,B = input.enter_matrix(n)
 #A, B = sort_diagram(A, B, n)
 temp_A,temp_B = sort_diag_arr(A, B)
@@ -121,3 +121,5 @@ temp_d.append(None)
 result_matrix = []
 result_matrix.append(temp_d)
 result_matrix = iterational_method(C,D, result_matrix, accuracy, n, 0)
+print(len(result_matrix))
+print(result_matrix[len(result_matrix)- 1][:len(result_matrix[0]) - 1])
