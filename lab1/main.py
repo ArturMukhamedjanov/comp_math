@@ -81,7 +81,7 @@ def sort_diag_arr(a, b) :
     
     return a, b
 
-def iterational_method(C, D,result_matrix, accuracy, n, iteration_counter):
+def iterational_method(C, D,result_matrix, accuracy, n, iteration_counter, A, B):
     new_answers = []
     max_deviation = 0
     for i in range(n):
@@ -94,14 +94,27 @@ def iterational_method(C, D,result_matrix, accuracy, n, iteration_counter):
         new_answers.append(temp)
         if(max_deviation < abs(result_matrix[iteration_counter][i] - temp)):
             max_deviation = abs(result_matrix[iteration_counter][i] - temp)
-    new_answers.append(max_deviation)
+    #new_answers.append(max_deviation)
+    max_deviation = max(count_residual(new_answers, A,B))
+    new_answers.append(max(count_residual(new_answers, A,B)))
     print(new_answers)
     result_matrix.append(new_answers)
     if(max_deviation < accuracy):
         return result_matrix
     else:
-        return iterational_method(C,D, result_matrix, accuracy, n, iteration_counter + 1)
+        if(iteration_counter == 100):
+            print("Количсетво итераций достигло максимума (100).")
+            return result_matrix
+        return iterational_method(C,D, result_matrix, accuracy, n, iteration_counter + 1, A, B)
 
+def count_residual(answer_matrix, A, B):
+    residual_arr = []
+    for i in range(n):
+        calc_ans = 0
+        for j in range(n):
+            calc_ans += A[i][j] * answer_matrix[j]
+        residual_arr.append(abs(calc_ans - B[i]))
+    return residual_arr
     
 
 n = input.enter_demension()
@@ -113,13 +126,18 @@ if(check_matrix_diag(temp_A, n)):
     A,B = temp_A, temp_B
 else:
     print("Невозможно составить матрицу c диагональным преобладанием!!! Возможномть несходимость Слау")
-    
+print(A, B)
 C = make_c_matrix(A, n)
 D = make_d_matrix(A, B, n)
-temp_d = D
+temp_d = []
+for i in range(n):
+    temp_d.append(100)
 temp_d.append(None)
 result_matrix = []
 result_matrix.append(temp_d)
-result_matrix = iterational_method(C,D, result_matrix, accuracy, n, 0)
+result_matrix = iterational_method(C,D, result_matrix, accuracy, n, 0, A, B)
 print(len(result_matrix))
-print(result_matrix[len(result_matrix)- 1][:len(result_matrix[0]) - 1])
+answer_matrix = result_matrix[len(result_matrix)- 1][:len(result_matrix[0]) - 1]
+print(answer_matrix)
+residual_arr = count_residual(answer_matrix, A,B)
+print(residual_arr)
